@@ -16,7 +16,11 @@ library(dplyr)
 
 # aggregate text by participant
 # note that this currently treats conversations from different days separately
-input_data <- read.csv("convos/Totally Real Conversation Data - Sheet1.csv")
+convos_path <- dir(paste(getwd(), "/convos", sep = ""))
+input_data <- do.call(rbind, lapply(
+  convos_path,
+  function(path) read.csv(paste(getwd(), "/convos/", path, sep = ""))
+))
 aggregated_text_by_participant <- input_data %>%
   group_by(ID, F.ID, M.ID, Date.Number) %>%
   summarize(Event = paste(Event, collapse = " "))
